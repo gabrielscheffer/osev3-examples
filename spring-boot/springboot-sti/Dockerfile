@@ -13,7 +13,7 @@ RUN yum install -y --enablerepo=centosplus \
     tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-devel && \
     yum clean all -y && \
     localedef -f UTF-8 -i pt_BR pt_BR.UTF-8 && \
-    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     (curl -0 http://www.eu.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | \
     tar -zx -C /usr/local) && \
     mv /usr/local/apache-maven-$MAVEN_VERSION /usr/local/maven && \
