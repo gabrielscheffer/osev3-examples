@@ -7,7 +7,7 @@ MAINTAINER Jorge Morales <jmorales@redhat.com>
 ENV TZ=America/Sao_Paulo
 ENV LC_ALL="pt_BR.utf8"
 ENV GRADLE_VERSION 2.6
-ENV MAVEN_VERSION 3.3.3
+ENV MAVEN_VERSION 3.3.9
 
 RUN yum install -y --enablerepo=centosplus \
     tar unzip bc which lsof java-1.8.0-openjdk java-1.8.0-openjdk-devel && \
