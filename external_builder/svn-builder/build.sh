@@ -17,9 +17,9 @@ BUILD_DIR=$(mktemp --directory --suffix=docker-build)
 pushd "${BUILD_DIR}"
 
 if [ -e /etc/secret-volume/.subversion ]; then
-  cp -r /etc/secret-volume/.subversion $HOME
   mkdir -p $HOME/.subversion/auth/svn.simple
-  find $HOME/.subversion/ -type f  ! -path "*config" ! -path "*servers" -exec mv {} $HOME/.subversion/auth/svn.simple \;
+  cp /etc/secret-volume/.subversion/config /etc/secret-volume/.subversion/servers $HOME/.subversion/
+  find /etc/secret-volume/.subversion/ -type f  ! -path "*config" ! -path "*servers" -exec cp {} $HOME/.subversion/auth/svn.simple \;
 fi
 
 svn checkout --non-interactive "${SOURCE_REPOSITORY}" .
