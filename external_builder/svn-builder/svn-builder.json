@@ -1,107 +1,99 @@
 {
-    "kind": "List",
+    "kind": "Template",
     "apiVersion": "v1",
-    "metadata": {},
-    "items": [
+    "metadata": {
+        "name": "openshift-svn-builder",
+        "creationTimestamp": null,
+        "annotations": {
+            "description": "Application template for SVN Docker builds and deploy on local OpenShift registry.",
+            "iconClass": "icon-docker"
+        }
+    },
+    "objects": [
         {
-            "kind": "ImageStream",
             "apiVersion": "v1",
+            "kind": "ImageStream",
             "metadata": {
-                "name": "openshift-svn-builder",
                 "labels": {
-                    "builder": "openshift-svn-builder"
-                }
-            },
-            "spec": {
-                "dockerImageRepository": "schefferdesouza/openshift-svn-builder"
+                    "application": "${APPLICATION_NAME}",
+                    "template": "openshift-svn-builder"
+                },
+                "name": "${APPLICATION_NAME}"
             }
         },
         {
-            "kind": "Template",
             "apiVersion": "v1",
+            "kind": "BuildConfig",
             "metadata": {
-                "name": "openshift-svn-builder",
-                "annotations": {
-                    "description": "Application template for SVN Docker builds and deploy on local OpenShift registry.",
-                    "iconClass": "icon-docker"
-                }
+                "labels": {
+                    "application": "${APPLICATION_NAME}",
+                    "template": "openshift-svn-builder"
+                },
+                "name": "${APPLICATION_NAME}"
             },
-            "objects": [
-                {
-                    "apiVersion": "v1",
-                    "kind": "ImageStream",
-                    "metadata": {
-                        "labels": {
-                            "application": "${APPLICATION_NAME}",
-                            "template": "openshift-svn-builder"
-                        },
-                        "name": "${APPLICATION_NAME}"
+            "spec": {
+                "output": {
+                    "pushSecret": {
+                        "name": "registry"
+                    },
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "${APPLICATION_NAME}:latest"
                     }
                 },
-                {
-                    "apiVersion": "v1",
-                    "kind": "BuildConfig",
-                    "metadata": {
-                        "labels": {
-                            "application": "${APPLICATION_NAME}",
-                            "template": "openshift-svn-builder"
-                        },
-                        "name": "${APPLICATION_NAME}"
-                    },
-                    "spec": {
-                        "output": {
-                            "to": {
-                                "kind": "ImageStreamTag",
-                                "name": "${APPLICATION_NAME}:latest"
-                            }
-                        },
-                        "strategy": {
-                            "customStrategy": {
-                                "env": [
-                                    {
-                                        "name": "SOURCE_REPOSITORY",
-                                        "value": "${SOURCE_REPOSITORY}"
-                                    },
-                                    {
-                                        "name": "DOCKERFILE",
-                                        "value": "${DOCKERFILE}"
-                                    }
-                                ],
-                                "exposeDockerSocket": true,
-                                "from": {
-                                    "kind": "ImageStreamTag",
-                                    "name": "openshift-svn-builder:latest"
-                                }
-                            },
-                            "type": "Custom"
-                        },
-                        "triggers": [
+                "strategy": {
+                    "customStrategy": {
+                        "env": [
                             {
-                                "imageChange": {},
-                                "type": "ImageChange"
+                                "name": "SOURCE_REPOSITORY",
+                                "value": "${SOURCE_REPOSITORY}"
+                            },
+                            {
+                                "name": "DOCKERFILE",
+                                "value": "${DOCKERFILE}"
+                            }
+                        ],
+                        "exposeDockerSocket": true,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "schefferdesouza/openshift-svn-builder:latest"
+                        },
+                        "secrets": [
+                            {
+                                "mountPath": "/etc/secret-volume/.subversion",
+                                "secretSource": {
+                                    "name": "subversion"
+                                }
                             }
                         ]
+                    },
+                    "type": "Custom"
+                },
+                "triggers": [
+                    {
+                        "imageChange": {},
+                        "type": "ImageChange"
                     }
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "APPLICATION_NAME",
-                    "description": "The name for the application."
-                },
-                {
-                    "name": "SOURCE_REPOSITORY",
-                    "description": "URL of SVN repository."
-                },
-                {
-                    "name": "DOCKERFILE",
-                    "description": "Docker Filename, defaults to Dockerfile",
-                    "value": "Dockerfile"
-                }
-            ],
-            "labels": {
-                "template": "openshift-svn-builder"
+                ]
             }
         }
-    ]
+    ],
+    "parameters": [
+        {
+            "name": "APPLICATION_NAME",
+            "description": "The name for the application."
+        },
+        {
+            "name": "SOURCE_REPOSITORY",
+            "description": "URL of SVN repository."
+        },
+        {
+            "name": "DOCKERFILE",
+            "description": "Docker Filename, defaults to Dockerfile",
+            "value": "Dockerfile"
+        }
+    ],
+    "labels": {
+        "template": "openshift-svn-builder"
+    }
 }
