@@ -18,9 +18,11 @@ pushd "${BUILD_DIR}"
 
 if [ -e /etc/secret-volume/.subversion ]; then
   cp -r /etc/secret-volume/.subversion $HOME
+  mkdir -p $HOME/.subversion/auth/svn.simple
+  find $HOME/.subversion/ -type f  ! -path "*config" ! -path "*servers" -exec mv {} $HOME/.subversion/auth/svn.simple \;
 fi
 
-svn checkout "${SOURCE_REPOSITORY}" .
+svn checkout --non-interactive "${SOURCE_REPOSITORY}" .
 
 echo -e ".d2i" >> .dockerignore
 
