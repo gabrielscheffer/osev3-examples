@@ -24,6 +24,9 @@ fi
 
 svn checkout --non-interactive "${SOURCE_REPOSITORY}" .
 
+#Running shells
+find . -type f -name "*.sh" -exec chmod 777 {} \;
+
 echo -e ".d2i" >> .dockerignore
 
 popd
