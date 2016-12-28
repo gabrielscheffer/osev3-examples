@@ -9,7 +9,7 @@ LABEL Version 0.1.0
 ENV TZ=America/Sao_Paulo
 ENV LC_ALL="pt_BR.utf8"
 
-RUN yum -y --enablerepo=centosplus install \
+RUN set -x && yum -y --enablerepo=centosplus install \
     docker unzip subversion && \
     yum -y clean all && \
     localedef -f UTF-8 -i pt_BR pt_BR.UTF-8 && \
