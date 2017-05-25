@@ -6,5 +6,14 @@
 # For more information see the documentation:
 #	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
 #
+export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/./urandom"
 
-exec java -Djava.security.egd=file:/dev/./urandom -jar /opt/openshift/app.jar $APP_OPTIONS
+#modify config file with license key
+echo "Updating New Relic configuration file..."
+sed -ie "s/<%= license_key %>/${NEWRELIC_LICENSE}/g" /opt/openshift/newrelic/newrelic.yml
+sed -ie "s/My Application/${NEWRELIC_APPNAME}/g" /opt/openshift/newrelic/newrelic.yml
+
+# Adding JVM Argument for New Relic agent
+echo "Adding JVM Argument for New Relic agent..."
+export NEWRELIC_AGENT="-javaagent:/opt/openshift/newrelic/newrelic.jar"
+exec java $JAVA_OPTS $NEWRELIC_AGENT -jar /opt/openshift/app.jar $APP_OPTIONS

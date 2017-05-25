@@ -19,10 +19,10 @@ fi
 #   echo "---> Restoring build artifacts"
 #   mv /tmp/artifacts/. ./
 # fi
-# 
+#
 # echo "---> Installing application source"
 # cp -Rf /tmp/src/. ./
-# 
+#
 # echo "---> Building application from source"
 # # TODO: Add build steps for your application, eg npm install, bundle install
 
@@ -133,7 +133,17 @@ fi
 # As SpringBoot you should only have 1 fat jar
 if [ $(ls /opt/openshift/*.jar | wc -l) -eq 1 ]; then
   mv /opt/openshift/*.jar /opt/openshift/app.jar
-  [ ! -f /opt/openshift/app.jar ] && echo "Application could not be properly built." && exit 1 
+  [ ! -f /opt/openshift/app.jar ] && echo "Application could not be properly built." && exit 1
+  ##### Beginning of New Relic Installation #####
+  echo "Beginning the deployment of New Relic Java agent"
+
+  #Downloading latest agent software
+  echo "Downloading the latest java agent from New Relic..."
+  curl -o newrelic.zip http://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
+
+  #Prepping New Relic files
+  echo "New Relic file download complete, unzipping archive..."
+  unzip newrelic.zip -d /opt/openshift
   echo "Application jar file is located in /opt/openshift/app.jar"
 else
   exit 1
