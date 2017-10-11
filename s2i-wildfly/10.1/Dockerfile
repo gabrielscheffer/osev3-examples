@@ -13,7 +13,7 @@ ENV WILDFLY_VERSION=10.1.0.Final \
 LABEL io.k8s.description="Platform for building and running JEE applications on WildFly 10.1.0.Final" \
       io.k8s.display-name="WildFly 10.1.0.Final" \
       io.openshift.expose-services="8080:http" \
-      io.openshift.tags="builder,wildfly,wildfly10" \
+      io.openshift.tags="builder,wildfly,wildfly10,jms" \
       io.openshift.s2i.destination="/opt/s2i/destination" \
       com.redhat.deployments-dir="/wildfly/standalone/deployments"
 
