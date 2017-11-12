@@ -1,2 +1,8 @@
 #!/bin/bash
+
+#modify config file with license key
+echo "Updating New Relic configuration file..."
+sed -ie "s/<%= license_key %>/${NEWRELIC_LICENSE}/g" /wildfly/newrelic/newrelic.yml
+sed -ie "s/My Application/${NEWRELIC_APPNAME}/g" /wildfly/newrelic/newrelic.yml
+
 exec /wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
