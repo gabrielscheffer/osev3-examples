@@ -330,6 +330,17 @@ if [ -d $LOCAL_SOURCE_DIR/deployments ]; then
   move_artifacts "deployments" war ear rar jar
 fi
 
+##### Beginning of New Relic Installation #####
+echo "Beginning the deployment of New Relic Java agent"
+
+#Downloading latest agent software
+echo "Downloading the latest java agent from New Relic..."
+curl -o newrelic.zip http://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip
+
+#Prepping New Relic files
+echo "New Relic file download complete, unzipping archive..."
+unzip newrelic.zip -d /wildfly
+
 if [ -d $LOCAL_SOURCE_DIR/cfg ]; then
   echo "Copying config files from project..."
   cp cfg/* /wildfly/standalone/configuration
